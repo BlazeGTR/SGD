@@ -215,9 +215,18 @@ def runLevel(levels, levelNum):
                 mapNeedsRedraw = True
 
             if isLevelFinished(levelObj, gameStateObj):
-                # level is solved, we should show the "Solved!" image.
                 levelIsComplete = True
-                keyPressed = False
+
+                completeSurf = BASICFONT.render('Level Complete!', True, WHITE)
+                completeRect = completeSurf.get_rect(center=(HALF_WINWIDTH, HALF_WINHEIGHT))
+                
+                DISPLAYSURF.blit(completeSurf, completeRect)
+                pygame.display.update()
+                
+                waitFrames = 3 * FPS
+                for _ in range(waitFrames):
+                    FPSCLOCK.tick(FPS)
+
 
         DISPLAYSURF.fill(BGCOLOR)
 
