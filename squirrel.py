@@ -89,6 +89,11 @@ def runGame():
     gameOverStartTime = 0     # time the player lost
     winMode = False           # if the player has won
 
+    score = 0
+    level = 0
+    levelUpStartTime = 0
+    showLevelUp = False
+
     # create the surfaces to hold game text
     gameOverSurf = BASICFONT.render('Game Over', True, WHITE)
     gameOverRect = gameOverSurf.get_rect()
@@ -212,6 +217,12 @@ def runGame():
         # draw the health meter
         drawHealthMeter(playerObj['health'])
 
+        if showLevelUp and time.time() - levelUpStartTime < 2:
+            levelSurf = BASICFONT.render('Level Up!', True, WHITE)
+            levelRect = levelSurf.get_rect()
+            levelRect.center = (HALF_WINWIDTH, 50)
+            DISPLAYSURF.blit(levelSurf, levelRect)
+
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 terminate()
@@ -278,6 +289,15 @@ def runGame():
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
                         # player is larger and eats the squirrel
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
+                        
+                        #zwiększamy prędkość
+                        score += 1
+                        if score % 5 == 0 and score // 5 > level:
+                            level = score // 5
+                            showLevelUp = True
+                            levelUpStartTime = time.time()
+                            global FPS
+                            FPS *= 2  # zwiększ prędkość gry
                         del squirrelObjs[i]
 
                         if playerObj['facing'] == LEFT:
